@@ -18,7 +18,7 @@ public class ZoomConfig : MonoBehaviour
         // If there are two touches on the device...
         if (Input.touchCount == 2)
         {
-            MoveCam.canMoveTheCam = false;
+            MoveCam.canMoveTheCam = false; // Do not allow the camera to move or rotate while zooming in and out 
 
             // Store both touches.
             Touch touchZero = Input.GetTouch(0);
@@ -54,7 +54,7 @@ public class ZoomConfig : MonoBehaviour
                 mainCam.fieldOfView = Mathf.Clamp(mainCam.fieldOfView, 15f, 120f);
             }
 
-            MoveCam.canMoveTheCam = true;
+            MoveCam.canMoveTheCam = true; // Finished the zooming in (out) for this frame, thus can move (rotate) the camera
         }
     }
 }

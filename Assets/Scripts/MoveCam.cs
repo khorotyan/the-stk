@@ -7,17 +7,15 @@ public class MoveCam : MonoBehaviour
 
     private Camera cam;
 
-    private float prevYTouchPos = 0;
-    private float curYTouchPos = 0;
-    private float prevXTouchPos = 0;
-    private float curXTouchPos = 0;
-    private Vector2 touchPos;
+    private Vector2 curTouchPos = new Vector2(0, 0);
+    private Vector2 prevTouchPos = new Vector2(0, 0);
     private int touchCount = 0;
-    private float screenMoveSpeed = 0.02f;
+    private float screenMoveSpeed = 1f;
     private bool escapedFrame = false;
     private bool firstTouch = true;
     private bool canCheckTheGesture = true;
 
+    /*
     enum Gestures
     {
         none,
@@ -26,6 +24,7 @@ public class MoveCam : MonoBehaviour
     }
 
     Gestures gestures = 0;
+    */
 
     void Awake()
     {
@@ -35,12 +34,13 @@ public class MoveCam : MonoBehaviour
 
     void Update()
     {
-        touchPos = Input.mousePosition;
-
         ManualCamMovement();
 
     }
 
+    // Moves and Rotates the camera based on the gestures that the user makes
+    //      Horizontal movement rotates the camera around the objects
+    //      Vertical movement moves the camera up and down
     void ManualCamMovement()
     {
         // If we release the mouse, start the whole process from the beginning
@@ -54,27 +54,26 @@ public class MoveCam : MonoBehaviour
 
             if (firstTouch == true)
             {
-                curYTouchPos = posY;
-                curXTouchPos = posX;
+                curTouchPos = new Vector2(posX, posY);
                 firstTouch = false;
             }
             else
             {
-                prevYTouchPos = curYTouchPos;
-                curYTouchPos = posY;
-                prevXTouchPos = curXTouchPos;
-                curXTouchPos = posX;
+                prevTouchPos = new Vector2(curTouchPos.x, curTouchPos.y);
+                curTouchPos = new Vector2(posX, posY);
 
-                float yTouchDiff = curYTouchPos - prevYTouchPos;
-                float xTouchDiff = curXTouchPos - prevXTouchPos;
+                float xTouchDiff = curTouchPos.x - prevTouchPos.x;
+                float yTouchDiff = curTouchPos.y - prevTouchPos.y;
 
                 // We escape a frame because whenever the camera moves to the desired position, current and previous positions swap
                 //      and the camera jumps from one current to previous position and the opposite
                 if (escapedFrame == false)
                 {
-                    Camera.main.transform.position -= new Vector3(0f , yTouchDiff * screenMoveSpeed, 0f);
+                    // Move the camera up and down
+                    Camera.main.transform.position -= new Vector3(0f , yTouchDiff * screenMoveSpeed * Time.deltaTime, 0f);
 
-                    transform.RotateAround(Vector3.zero, Vector3.up, xTouchDiff * 15 * Time.deltaTime);
+                    // Rotate the camera around the objects
+                    transform.RotateAround(Vector3.zero, Vector3.up, xTouchDiff * 25 * Time.deltaTime);
 
                     // Do not allow the camera to go behind the platform
                     if (Camera.main.transform.position.y < 3)
