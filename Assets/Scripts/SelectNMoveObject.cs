@@ -6,17 +6,14 @@ public class SelectNMoveObject : MonoBehaviour {
     public Material normalObjMaterial;
     public Material selectedObjMaterial;
 
-    private Vector2 curTouchPos = new Vector2(0, 0);
-    private Vector2 prevTouchPos = new Vector2(0, 0);
+    private Vector2 forceStartPos;
+    private Vector2 forceEndPos;
 
     private List<GameObject> rayastedObjects = new List<GameObject>();
-    private float objMoveSpeed = 1f;
-    private bool firstTouch = true;
-    private bool escapedFrame = false;
 
     void Start ()
     {
-	
+        
 	}
 	
 	void Update ()
@@ -52,6 +49,7 @@ public class SelectNMoveObject : MonoBehaviour {
                     MoveCam.canMoveTheCam = false; // Do not allow the camera to be moved or rotated during moving an object
                                                
                     hit.transform.gameObject.GetComponent<Renderer>().material = selectedObjMaterial;
+                    forceStartPos = Input.mousePosition;
                     rayastedObjects.Add(hit.transform.gameObject);
                 }
             }
@@ -60,47 +58,29 @@ public class SelectNMoveObject : MonoBehaviour {
         MoveObject();
     }
 
-    // Moves the selected StackerObject which is in rayastedObjects list
+    // Moves the selected StackerObject which is in rayastedObjects list by exerting force on them based on the
+    //      starting and the ending (current) mouse positions
+    //      See More At "Game Design" Book 1 - Page 11
     void MoveObject()
     {
         if (rayastedObjects.Count > 0)
         {
-            // If we release the mouse, start the whole process from the beginning
-            if (Input.GetMouseButtonUp(0))
-                firstTouch = true;
-
             if (Input.GetMouseButton(0))
             {
-                float posY = Input.mousePosition.y;
-                float posX = Input.mousePosition.x;
+                forceEndPos = Input.mousePosition;
 
-                if (firstTouch == true)
-                {
-                    curTouchPos = new Vector2(posX, posY);
-                    firstTouch = false;
-                }
-                else
-                {
-                    prevTouchPos = new Vector2(curTouchPos.x, curTouchPos.y);
-                    curTouchPos = new Vector2(posX, posY);
+                float xForce = forceEndPos.x - forceStartPos.x;
+                float zForce = forceEndPos.y - forceStartPos.y;
 
-                    float xTouchDiff = curTouchPos.x - prevTouchPos.x;
-                    float yTouchDiff = curTouchPos.y - prevTouchPos.y;
-
-                    // We escape a frame because whenever the camera moves to the desired position, current and previous positions swap
-                    //      and the camera jumps from one current to previous position and the opposite
-                    if (escapedFrame == false)
-                    {
-                        rayastedObjects[0].transform.position += new Vector3(xTouchDiff * objMoveSpeed * Time.deltaTime, 0f, yTouchDiff * objMoveSpeed * Time.deltaTime);
-
-                        escapedFrame = true;
-                    }
-                    else
-                    {
-                        escapedFrame = false;
-                    }
-                }
-            }
+                // Apply force based on the transform of the camera, in this case, the direction it is facing
+                rayastedObjects[0].GetComponent<ConstantForce>().force = Camera.main.transform.TransformDirection(xForce, 0, zForce);
+            }     
+            
+            // Whenever the mouse is released, get rid of the force
+            if (Input.GetMouseButtonUp(0))
+            {
+                rayastedObjects[0].GetComponent<ConstantForce>().force = new Vector3(0, 0, 0);
+            }       
         }     
     }
 }

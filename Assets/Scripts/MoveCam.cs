@@ -33,9 +33,8 @@ public class MoveCam : MonoBehaviour
 
 
     void Update()
-    {
+    {  
         ManualCamMovement();
-
     }
 
     // Moves and Rotates the camera based on the gestures that the user makes
@@ -73,7 +72,7 @@ public class MoveCam : MonoBehaviour
                     Camera.main.transform.position -= new Vector3(0f , yTouchDiff * screenMoveSpeed * Time.deltaTime, 0f);
 
                     // Rotate the camera around the objects
-                    transform.RotateAround(Vector3.zero, Vector3.up, xTouchDiff * 25 * Time.deltaTime);
+                    transform.RotateAround(Vector3.zero, Vector3.up, xTouchDiff * 25 * Time.deltaTime);     
 
                     // Do not allow the camera to go behind the platform
                     if (Camera.main.transform.position.y < 3)
