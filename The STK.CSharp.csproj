@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\MoveCam.cs" />
+    <Compile Include="Assets\Scripts\ObjectCollisionManager.cs" />
     <Compile Include="Assets\Scripts\SelectNMoveObject.cs" />
     <Compile Include="Assets\Scripts\SpawnStackerObjects.cs" />
     <Compile Include="Assets\Scripts\ZoomConfig.cs" />

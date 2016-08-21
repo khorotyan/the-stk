@@ -6,9 +6,10 @@ public class SpawnStackerObjects : MonoBehaviour
     public GameObject stackerObj;
     public Transform stackerObjParent;
 
+    public static float maxHeight = 0; 
     public static List<GameObject> stackers = new List<GameObject>();
 
-	void Start ()
+    void Start ()
     {
         SpawnObjects();
     }
@@ -18,6 +19,7 @@ public class SpawnStackerObjects : MonoBehaviour
        
 	}
 
+    // Spawn the tower at the beginning of the game
     void SpawnObjects()
     {
         float height = 0;
@@ -45,15 +47,28 @@ public class SpawnStackerObjects : MonoBehaviour
                 stackers.Add(tempSpawner2);
             }
 
-            height += Random.Range(0.51f, 0.66f);
+            height += Random.Range(0.5f, 0.64f);
+        }
+
+        for (int i = 0; i < 54; i++)
+        {
+            float yScale = Random.Range(0.486f, 0.5f);
+            stackers[i].gameObject.transform.localScale = new Vector3(3, yScale, 1);
+
+            // Keep the length of the tower
+            if (i % 3 == 0)
+                maxHeight += yScale;
         }
     }
 
     public void RestartScene()
     {
+        maxHeight = 0;
+
         RebuildTheTower();
     }
 
+    // Whenever the game is reset, the objects get back to their place and we reset all the information about them
     void RebuildTheTower()
     {
         float height = 0;
@@ -80,11 +95,18 @@ public class SpawnStackerObjects : MonoBehaviour
             stackers[6 * i + 5].transform.position = new Vector3(0, height, 1);
             stackers[6 * i + 5].transform.rotation = Quaternion.Euler(0, 0, 0);
 
-            height += Random.Range(0.5f, 0.65f);
+            height += Random.Range(0.5f, 0.64f);
         }
 
         for (int i = 0; i < 54; i++)
         {
+            float yScale = Random.Range(0.486f, 0.5f);
+            stackers[i].gameObject.transform.localScale = new Vector3(3, yScale, 1);
+
+            // Keep the length of the tower
+            if (i % 3 == 0)
+                maxHeight += yScale;
+
             stackers[i].GetComponent<Rigidbody>().isKinematic = true;
             stackers[i].GetComponent<Rigidbody>().isKinematic = false;
         }

@@ -6,10 +6,12 @@ public class SelectNMoveObject : MonoBehaviour {
     public Material normalObjMaterial;
     public Material selectedObjMaterial;
 
+    public static bool canMoveTheObject = true;
+
     private Vector2 forceStartPos;
     private Vector2 forceEndPos;
 
-    private List<GameObject> rayastedObjects = new List<GameObject>();
+    private List<GameObject> rayastedObjects = new List<GameObject>();   
 
     void Start ()
     {
@@ -18,7 +20,19 @@ public class SelectNMoveObject : MonoBehaviour {
 	
 	void Update ()
     {
-        SelectObject();
+        if (canMoveTheObject == false && rayastedObjects.Count > 0)
+        {
+            rayastedObjects[0].transform.gameObject.GetComponent<Renderer>().material = normalObjMaterial;
+            rayastedObjects.Remove(rayastedObjects[0]);
+            
+            canMoveTheObject = true;
+        }
+
+        if (canMoveTheObject == true)
+            SelectObject();
+        
+        
+        
 
         if (Input.GetMouseButtonUp(0))
             MoveCam.canMoveTheCam = true; // Finished the moving the StackerObject for this frame, thus can move (rotate) the camera
@@ -36,18 +50,20 @@ public class SelectNMoveObject : MonoBehaviour {
 
             if (Physics.Raycast(ray, out hit, 500f))
             {
-                // If we previously raycasted an object, change its material to a normal one (unselected) and remove it from list
+                // If we previously raycasted an object or tabbed another object, 
+                //      change its material to a normal one (unselected) and remove it from list
                 if (rayastedObjects.Count > 0)
                 {
                     rayastedObjects[0].transform.gameObject.GetComponent<Renderer>().material = normalObjMaterial;
                     rayastedObjects.Remove(rayastedObjects[0]);
                 }
-                 
+
                 // If our raycast hits the StackerObject, change its material to the selected one and add it to the list
                 if (hit.transform.gameObject.tag == "StackerObject") // It is the blocks layer
                 {
+                    Debug.Log(rayastedObjects.Count);
                     MoveCam.canMoveTheCam = false; // Do not allow the camera to be moved or rotated during moving an object
-                                               
+
                     hit.transform.gameObject.GetComponent<Renderer>().material = selectedObjMaterial;
                     forceStartPos = Input.mousePosition;
                     rayastedObjects.Add(hit.transform.gameObject);
@@ -79,7 +95,7 @@ public class SelectNMoveObject : MonoBehaviour {
             // Whenever the mouse is released, get rid of the force
             if (Input.GetMouseButtonUp(0))
             {
-                rayastedObjects[0].GetComponent<ConstantForce>().force = new Vector3(0, 0, 0);
+                rayastedObjects[0].GetComponent<ConstantForce>().force = Vector3.zero;
             }       
         }     
     }
