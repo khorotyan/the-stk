@@ -20,6 +20,7 @@ public class SelectNMoveObject : MonoBehaviour {
 	
 	void Update ()
     {
+        // Whenever an object is extracted, unselect it
         if (canMoveTheObject == false && rayastedObjects.Count > 0)
         {
             rayastedObjects[0].transform.gameObject.GetComponent<Renderer>().material = normalObjMaterial;
@@ -61,12 +62,15 @@ public class SelectNMoveObject : MonoBehaviour {
                 // If our raycast hits the StackerObject, change its material to the selected one and add it to the list
                 if (hit.transform.gameObject.tag == "StackerObject") // It is the blocks layer
                 {
-                    Debug.Log(rayastedObjects.Count);
-                    MoveCam.canMoveTheCam = false; // Do not allow the camera to be moved or rotated during moving an object
+                    // Does not allow to select the items on top of the tower
+                    if (CheckIfObjIsSelectable(hit) == true)
+                    {
+                        MoveCam.canMoveTheCam = false; // Do not allow the camera to be moved or rotated during moving an object
 
-                    hit.transform.gameObject.GetComponent<Renderer>().material = selectedObjMaterial;
-                    forceStartPos = Input.mousePosition;
-                    rayastedObjects.Add(hit.transform.gameObject);
+                        hit.transform.gameObject.GetComponent<Renderer>().material = selectedObjMaterial;
+                        forceStartPos = Input.mousePosition;
+                        rayastedObjects.Add(hit.transform.gameObject);
+                    }                   
                 }
             }
         }
@@ -98,5 +102,36 @@ public class SelectNMoveObject : MonoBehaviour {
                 rayastedObjects[0].GetComponent<ConstantForce>().force = Vector3.zero;
             }       
         }     
+    }
+
+    // Check if an object can be selected, do not allow to select the objects on top of the tower
+    bool CheckIfObjIsSelectable(RaycastHit hit)
+    {
+        if (SpawnStackerObjects.numOfExtractedObjs % 3 == 0)
+            return CaseManager(hit, 51, 3);
+        else if (SpawnStackerObjects.numOfExtractedObjs % 3 == 1)
+            return CaseManager(hit, 50, 4);
+        else if (SpawnStackerObjects.numOfExtractedObjs % 3 == 2)
+        {
+            SpawnStackerObjects.maxHeight += hit.transform.localScale.y;
+
+            return CaseManager(hit, 49, 5);
+        }
+
+        return true;
+    }
+
+    // Checks if the list of objects contains the items, used to make "CheckIfObjIsSelectable" Method shorter and faster
+    bool CaseManager(RaycastHit hit, int index, int count)
+    {
+        List<GameObject> newList = new List<GameObject>();
+        newList = SpawnStackerObjects.stackers.GetRange(index, count);
+
+        if (newList.Contains(hit.transform.gameObject))
+        {
+            return false;
+        }
+
+        return true;
     }
 }

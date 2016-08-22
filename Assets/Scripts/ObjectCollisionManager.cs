@@ -7,6 +7,7 @@ public class ObjectCollisionManager : MonoBehaviour
 
     private int collisionCount = 0;
     private bool noCollision = false;
+    private bool canPlaceAtTop = false;
 
 	void Start ()
     {
@@ -21,22 +22,86 @@ public class ObjectCollisionManager : MonoBehaviour
     void ManageCollision()
     {
         // If there is no collision, move the object to the top of the tower and reset all its physics information
-        if (noCollision == true)
+        if (noCollision == true && collisionCount == 0)
         {
-            gameObject.transform.position = new Vector3(0, SpawnStackerObjects.maxHeight + 4f, 0);
-            Camera.main.transform.position = new Vector3(Camera.main.transform.position.x , SpawnStackerObjects.maxHeight + 5f, Camera.main.transform.position.z);
+            ObjTopPlcManager();
 
-            gameObject.transform.rotation = Quaternion.identity;
+            if (canPlaceAtTop == true)
+            {
+                Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, SpawnStackerObjects.maxHeight + 3f, Camera.main.transform.position.z);
 
-            DestroyImmediate(gameObject.GetComponent<ConstantForce>());
-            gameObject.AddComponent<ConstantForce>();
+                // Resets the force information
+                DestroyImmediate(gameObject.GetComponent<ConstantForce>());
+                gameObject.AddComponent<ConstantForce>();
 
-            gameObject.GetComponent<Rigidbody>().isKinematic = true;
-            gameObject.GetComponent<Rigidbody>().isKinematic = false;
+                // Resets other physics information
+                gameObject.GetComponent<Rigidbody>().isKinematic = true;
+                gameObject.GetComponent<Rigidbody>().isKinematic = false;
 
-            SelectNMoveObject.canMoveTheObject = false;
-            noCollision = false;
+                // Removes the item and puts it at the end of the list to have more controll over the objects
+                SpawnStackerObjects.stackers.Remove(gameObject);
+                SpawnStackerObjects.stackers.Add(gameObject);
+
+                SpawnStackerObjects.numOfExtractedObjs++;
+                SelectNMoveObject.canMoveTheObject = false;
+                noCollision = false;
+                canPlaceAtTop = false;
+            }
         }
+    }
+
+    // Configures the position and the rotation of the objects that were extracted from the tower
+    void ObjTopPlcManager()
+    {
+        gameObject.GetComponent<Rigidbody>().isKinematic = true;
+        gameObject.GetComponent<Rigidbody>().isKinematic = false;
+
+        gameObject.GetComponent<ConstantForce>().force = new Vector3(0, 1500, 0);
+
+        StartCoroutine(WaitBeforePlace());
+
+        if (canPlaceAtTop == true)
+        {
+            if (SpawnStackerObjects.numOfExtractedObjs % 6 == 0)
+            {
+                gameObject.transform.position = new Vector3(-1.02f, SpawnStackerObjects.maxHeight + 0.05f, 0);
+                gameObject.transform.eulerAngles = new Vector3(0, 90, 0);
+
+            }
+            else if (SpawnStackerObjects.numOfExtractedObjs % 6 == 1)
+            {
+                gameObject.transform.position = new Vector3(0, SpawnStackerObjects.maxHeight + 0.05f, 0);
+                gameObject.transform.eulerAngles = new Vector3(0, 90, 0);
+            }
+            else if (SpawnStackerObjects.numOfExtractedObjs % 6 == 2)
+            {
+                gameObject.transform.position = new Vector3(1.02f, SpawnStackerObjects.maxHeight + 0.05f, 0);
+                gameObject.transform.eulerAngles = new Vector3(0, 90, 0);
+            }
+            else if (SpawnStackerObjects.numOfExtractedObjs % 6 == 3)
+            {
+                gameObject.transform.position = new Vector3(0, SpawnStackerObjects.maxHeight + 0.05f, 1.02f);
+                gameObject.transform.eulerAngles = new Vector3(0, 0, 0);
+            }
+            else if (SpawnStackerObjects.numOfExtractedObjs % 6 == 4)
+            {
+                gameObject.transform.position = new Vector3(0, SpawnStackerObjects.maxHeight + 0.05f, 0);
+                gameObject.transform.eulerAngles = new Vector3(0, 0, 0);
+            }
+            else if (SpawnStackerObjects.numOfExtractedObjs % 6 == 5)
+            {
+                gameObject.transform.position = new Vector3(0, SpawnStackerObjects.maxHeight + 0.05f, -1.02f);
+                gameObject.transform.eulerAngles = new Vector3(0, 0, 0);
+            }
+        }
+
+        
+    }
+
+    void OnTriggerEnter(Collider collider)
+    {
+        if (collider.tag == "StackerObject")
+            collisionCount++;
     }
 
     void OnTriggerStay(Collider collider)
@@ -46,8 +111,16 @@ public class ObjectCollisionManager : MonoBehaviour
 
     void OnTriggerExit(Collider collider)
     {
+        if (collider.tag == "StackerObject")
+            collisionCount--;
+
         noCollision = true;
         lastCollider = collider;
     }
 
+    IEnumerator WaitBeforePlace()
+    {
+        yield return new WaitForSeconds(1f);
+        canPlaceAtTop = true;
+    }
 }
