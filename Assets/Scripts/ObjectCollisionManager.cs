@@ -64,38 +64,78 @@ public class ObjectCollisionManager : MonoBehaviour
         {
             if (SpawnStackerObjects.numOfExtractedObjs % 6 == 0)
             {
-                gameObject.transform.position = new Vector3(-1.02f, SpawnStackerObjects.maxHeight + 0.05f, 0);
-                gameObject.transform.eulerAngles = new Vector3(0, 90, 0);
+                float extraXRot = SpawnStackerObjects.stackers[52].transform.eulerAngles.x;
+                float extraYRot = SpawnStackerObjects.stackers[52].transform.eulerAngles.y;
+                float extraZRot = SpawnStackerObjects.stackers[52].transform.eulerAngles.z;
 
+                float pieceOfXPos = SpawnStackerObjects.stackers[52].transform.position.x;
+                float pieceOfZPos = SpawnStackerObjects.stackers[52].transform.position.z;
+
+                gameObject.transform.position = new Vector3(-1.02f + pieceOfXPos, SpawnStackerObjects.maxHeight + 0.1f, 0 + pieceOfZPos);
+                gameObject.transform.eulerAngles = new Vector3(extraXRot, 90 + extraYRot, -extraZRot);
+                
             }
             else if (SpawnStackerObjects.numOfExtractedObjs % 6 == 1)
             {
-                gameObject.transform.position = new Vector3(0, SpawnStackerObjects.maxHeight + 0.05f, 0);
-                gameObject.transform.eulerAngles = new Vector3(0, 90, 0);
+                float extraXRot = SpawnStackerObjects.stackers[51].transform.eulerAngles.x;
+                float extraYRot = SpawnStackerObjects.stackers[51].transform.eulerAngles.y;
+                float extraZRot = SpawnStackerObjects.stackers[51].transform.eulerAngles.z;
+
+                float pieceOfXPos = SpawnStackerObjects.stackers[51].transform.position.x;
+                float pieceOfZPos = SpawnStackerObjects.stackers[51].transform.position.z;
+
+                gameObject.transform.position = new Vector3(0 + pieceOfXPos, SpawnStackerObjects.maxHeight + 0.1f, 0 + pieceOfZPos);
+                gameObject.transform.eulerAngles = new Vector3(extraXRot, 90 + extraYRot, -extraZRot);
             }
             else if (SpawnStackerObjects.numOfExtractedObjs % 6 == 2)
             {
-                gameObject.transform.position = new Vector3(1.02f, SpawnStackerObjects.maxHeight + 0.05f, 0);
-                gameObject.transform.eulerAngles = new Vector3(0, 90, 0);
+                float extraXRot = SpawnStackerObjects.stackers[50].transform.eulerAngles.x;
+                float extraYRot = SpawnStackerObjects.stackers[50].transform.eulerAngles.y;
+                float extraZRot = SpawnStackerObjects.stackers[50].transform.eulerAngles.z;
+
+                float pieceOfXPos = SpawnStackerObjects.stackers[50].transform.position.x;
+                float pieceOfZPos = SpawnStackerObjects.stackers[50].transform.position.z;
+
+                gameObject.transform.position = new Vector3(1.02f + pieceOfXPos, SpawnStackerObjects.maxHeight + 0.1f, 0 + pieceOfZPos);
+                gameObject.transform.eulerAngles = new Vector3(extraXRot, 90 + extraYRot, -extraZRot);
             }
             else if (SpawnStackerObjects.numOfExtractedObjs % 6 == 3)
             {
-                gameObject.transform.position = new Vector3(0, SpawnStackerObjects.maxHeight + 0.05f, 1.02f);
-                gameObject.transform.eulerAngles = new Vector3(0, 0, 0);
+                float extraXRot = SpawnStackerObjects.stackers[52].transform.eulerAngles.x;
+                float extraYRot = SpawnStackerObjects.stackers[52].transform.eulerAngles.y - 90;
+                float extraZRot = SpawnStackerObjects.stackers[52].transform.eulerAngles.z;
+
+                float pieceOfXPos = SpawnStackerObjects.stackers[52].transform.position.x;
+                float pieceOfZPos = SpawnStackerObjects.stackers[52].transform.position.z;
+
+                gameObject.transform.position = new Vector3(0 + pieceOfXPos, SpawnStackerObjects.maxHeight + 0.1f, 1.02f + pieceOfZPos);
+                gameObject.transform.eulerAngles = new Vector3(extraXRot, 0 + extraYRot, -extraZRot);
             }
             else if (SpawnStackerObjects.numOfExtractedObjs % 6 == 4)
             {
-                gameObject.transform.position = new Vector3(0, SpawnStackerObjects.maxHeight + 0.05f, 0);
-                gameObject.transform.eulerAngles = new Vector3(0, 0, 0);
+                float extraXRot = SpawnStackerObjects.stackers[51].transform.eulerAngles.x;
+                float extraYRot = SpawnStackerObjects.stackers[51].transform.eulerAngles.y - 90;
+                float extraZRot = SpawnStackerObjects.stackers[51].transform.eulerAngles.z;
+
+                float pieceOfXPos = SpawnStackerObjects.stackers[51].transform.position.x;
+                float pieceOfZPos = SpawnStackerObjects.stackers[51].transform.position.z;
+
+                gameObject.transform.position = new Vector3(0 + pieceOfXPos, SpawnStackerObjects.maxHeight + 0.1f, 0 + pieceOfZPos);
+                gameObject.transform.eulerAngles = new Vector3(extraXRot, 0 + extraYRot, -extraZRot);
             }
             else if (SpawnStackerObjects.numOfExtractedObjs % 6 == 5)
             {
-                gameObject.transform.position = new Vector3(0, SpawnStackerObjects.maxHeight + 0.05f, -1.02f);
-                gameObject.transform.eulerAngles = new Vector3(0, 0, 0);
-            }
-        }
+                float extraXRot = SpawnStackerObjects.stackers[50].transform.eulerAngles.x;
+                float extraYRot = SpawnStackerObjects.stackers[50].transform.eulerAngles.y - 90;
+                float extraZRot = SpawnStackerObjects.stackers[50].transform.eulerAngles.z;
 
-        
+                float pieceOfXPos = SpawnStackerObjects.stackers[50].transform.position.x;
+                float pieceOfZPos = SpawnStackerObjects.stackers[50].transform.position.z;
+
+                gameObject.transform.position = new Vector3(0 + pieceOfXPos, SpawnStackerObjects.maxHeight + 0.1f, -1.02f + pieceOfZPos);
+                gameObject.transform.eulerAngles = new Vector3(extraXRot, 0 + extraYRot, -extraZRot);
+            }
+        }       
     }
 
     void OnTriggerEnter(Collider collider)

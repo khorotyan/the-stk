@@ -10,7 +10,7 @@ public class MoveCam : MonoBehaviour
     private Vector2 curTouchPos = new Vector2(0, 0);
     private Vector2 prevTouchPos = new Vector2(0, 0);
     private int touchCount = 0;
-    private float screenMoveSpeed = 1f;
+    private float screenMoveSpeed = 15f;
     private bool escapedFrame = false;
     private bool firstTouch = true;
     private bool canCheckTheGesture = true;
@@ -64,15 +64,25 @@ public class MoveCam : MonoBehaviour
                 float xTouchDiff = curTouchPos.x - prevTouchPos.x;
                 float yTouchDiff = curTouchPos.y - prevTouchPos.y;
 
+                if (yTouchDiff > 15)
+                    yTouchDiff = 15;
+                else if (yTouchDiff < -15)
+                    yTouchDiff = -15;
+
+                if (xTouchDiff > 15)
+                    xTouchDiff = 15;
+                else if (xTouchDiff < -15)
+                    xTouchDiff = -15;
+
                 // We escape a frame because whenever the camera moves to the desired position, current and previous positions swap
                 //      and the camera jumps from one current to previous position and the opposite
                 if (escapedFrame == false)
                 {
                     // Move the camera up and down
-                    Camera.main.transform.position -= new Vector3(0f , yTouchDiff * screenMoveSpeed * Time.deltaTime, 0f);
+                    Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, Camera.main.transform.position + new Vector3(0f , -yTouchDiff * screenMoveSpeed * Time.deltaTime, 0f), 0.05f);
 
                     // Rotate the camera around the objects
-                    transform.RotateAround(Vector3.zero, Vector3.up, xTouchDiff * 25 * Time.deltaTime);     
+                    transform.RotateAround(Vector3.zero, Vector3.up, xTouchDiff * 12.5f * Time.deltaTime);     
 
                     // Do not allow the camera to go behind the platform
                     if (Camera.main.transform.position.y < 3)

@@ -8,10 +8,14 @@ public class SelectNMoveObject : MonoBehaviour {
 
     public static bool canMoveTheObject = true;
 
+    private Vector2 curTouchPos = new Vector2(0, 0);
+    private Vector2 prevTouchPos = new Vector2(0, 0);
+    private bool isATouch = false;
+    private bool firstTouch = true;
     private Vector2 forceStartPos;
     private Vector2 forceEndPos;
 
-    private List<GameObject> rayastedObjects = new List<GameObject>();   
+    private List<GameObject> rayastedObjects = new List<GameObject>();
 
     void Start ()
     {
@@ -62,8 +66,10 @@ public class SelectNMoveObject : MonoBehaviour {
                 // If our raycast hits the StackerObject, change its material to the selected one and add it to the list
                 if (hit.transform.gameObject.tag == "StackerObject") // It is the blocks layer
                 {
+                    CheckIfWasATouch();
+
                     // Does not allow to select the items on top of the tower
-                    if (CheckIfObjIsSelectable(hit) == true)
+                    if (CheckIfObjIsSelectable(hit) == true && isATouch == true)
                     {
                         MoveCam.canMoveTheCam = false; // Do not allow the camera to be moved or rotated during moving an object
 
@@ -108,15 +114,16 @@ public class SelectNMoveObject : MonoBehaviour {
     bool CheckIfObjIsSelectable(RaycastHit hit)
     {
         if (SpawnStackerObjects.numOfExtractedObjs % 3 == 0)
+        {
+            if (SpawnStackerObjects.numOfExtractedObjs > 0)
+                SpawnStackerObjects.maxHeight += hit.transform.localScale.y;
+
             return CaseManager(hit, 51, 3);
+        }
         else if (SpawnStackerObjects.numOfExtractedObjs % 3 == 1)
             return CaseManager(hit, 50, 4);
-        else if (SpawnStackerObjects.numOfExtractedObjs % 3 == 2)
-        {
-            SpawnStackerObjects.maxHeight += hit.transform.localScale.y;
-
+        else if (SpawnStackerObjects.numOfExtractedObjs % 3 == 2)    
             return CaseManager(hit, 49, 5);
-        }
 
         return true;
     }
@@ -133,5 +140,35 @@ public class SelectNMoveObject : MonoBehaviour {
         }
 
         return true;
+    }
+
+    // Checks whether the block was touched or dragged, because if the screen was dragged, 
+    //      there is no need to select the block
+    void CheckIfWasATouch()
+    {
+        float posY = Input.mousePosition.y;
+        float posX = Input.mousePosition.x;
+
+        if (Input.GetMouseButtonUp(0))
+            firstTouch = false;
+
+        if (firstTouch == true)
+        {
+            curTouchPos = new Vector2(posX, posY);
+            firstTouch = false;
+        }
+        else
+        {
+            prevTouchPos = new Vector2(curTouchPos.x, curTouchPos.y);
+            curTouchPos = new Vector2(posX, posY);
+
+            float xTouchDiff = curTouchPos.x - prevTouchPos.x;
+            float yTouchDiff = curTouchPos.y - prevTouchPos.y;
+            Debug.Log(xTouchDiff);
+            if (Mathf.Abs(xTouchDiff) < 5 && Mathf.Abs(yTouchDiff) < 5)
+                isATouch = true;
+            else
+                isATouch = false;
+        }
     }
 }
