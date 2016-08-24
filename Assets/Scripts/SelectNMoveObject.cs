@@ -8,14 +8,15 @@ public class SelectNMoveObject : MonoBehaviour {
 
     public static bool canMoveTheObject = true;
 
-    private Vector2 curTouchPos = new Vector2(0, 0);
-    private Vector2 prevTouchPos = new Vector2(0, 0);
-    private bool isATouch = false;
-    private bool firstTouch = true;
+    private Vector2 downTouchPos = Vector2.zero;
+    private Vector2 upTouchPos = Vector2.zero;
     private Vector2 forceStartPos;
     private Vector2 forceEndPos;
-
+    private bool mouseDown = false;
+    private TouchedThings touchedThings = TouchedThings.none;
     private List<GameObject> rayastedObjects = new List<GameObject>();
+
+    enum TouchedThings { none, background, stackerObject }
 
     void Start ()
     {
@@ -34,13 +35,7 @@ public class SelectNMoveObject : MonoBehaviour {
         }
 
         if (canMoveTheObject == true)
-            SelectObject();
-        
-        
-        
-
-        if (Input.GetMouseButtonUp(0))
-            MoveCam.canMoveTheCam = true; // Finished the moving the StackerObject for this frame, thus can move (rotate) the camera
+            SelectObject();      
     }
 
     // By clicking on the object, the user can select it and becomes visible through objects due to "selectedObjMaterial" material   
@@ -48,37 +43,37 @@ public class SelectNMoveObject : MonoBehaviour {
     //      Whenever clicked on other places, the selected one becomes unselected
     void SelectObject()
     {
-        if (Input.GetMouseButtonDown(0))
+        CheckIfWasATouch();
+
+        RaycastHit hit = new RaycastHit();
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out hit, 500f))
         {
-            RaycastHit hit = new RaycastHit();
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(ray, out hit, 500f))
+            // If we previously raycasted an object or tabbed another object, 
+            //      change its material to a normal one (unselected) and remove it from list
+            if (rayastedObjects.Count > 0 && CheckIfWasATouch() == true && mouseDown == true)
             {
-                // If we previously raycasted an object or tabbed another object, 
-                //      change its material to a normal one (unselected) and remove it from list
-                if (rayastedObjects.Count > 0)
+                rayastedObjects[0].transform.gameObject.GetComponent<Renderer>().material = normalObjMaterial;
+                rayastedObjects.Remove(rayastedObjects[0]);
+                MoveCam.canMoveTheCam = true;
+                mouseDown = false;
+            }
+
+            // If our raycast hits the StackerObject, change its material to the selected one and add it to the list
+            if (hit.transform.gameObject.tag == "StackerObject" && CheckIfWasATouch() == true) // It is the blocks layer
+            {
+                // Does not allow to select the items on top of the tower
+                if (CheckIfObjIsSelectable(hit) == true)
                 {
-                    rayastedObjects[0].transform.gameObject.GetComponent<Renderer>().material = normalObjMaterial;
-                    rayastedObjects.Remove(rayastedObjects[0]);
-                }
-
-                // If our raycast hits the StackerObject, change its material to the selected one and add it to the list
-                if (hit.transform.gameObject.tag == "StackerObject") // It is the blocks layer
-                {
-                    CheckIfWasATouch();
-
-                    // Does not allow to select the items on top of the tower
-                    if (CheckIfObjIsSelectable(hit) == true && isATouch == true)
-                    {
-                        MoveCam.canMoveTheCam = false; // Do not allow the camera to be moved or rotated during moving an object
-
-                        hit.transform.gameObject.GetComponent<Renderer>().material = selectedObjMaterial;
-                        forceStartPos = Input.mousePosition;
-                        rayastedObjects.Add(hit.transform.gameObject);
-                    }                   
+                    MoveCam.canMoveTheCam = false;
+                    hit.transform.gameObject.GetComponent<Renderer>().material = selectedObjMaterial;
+                    forceStartPos = Input.mousePosition;
+                    rayastedObjects.Add(hit.transform.gameObject);
+                    mouseDown = false;
                 }
             }
+
         }
 
         MoveObject();
@@ -99,7 +94,7 @@ public class SelectNMoveObject : MonoBehaviour {
                 float zForce = forceEndPos.y - forceStartPos.y;
 
                 // Apply force based on the transform of the camera, in this case, the direction it is facing
-                rayastedObjects[0].GetComponent<ConstantForce>().force = Camera.main.transform.TransformDirection(xForce, 0, zForce);
+                rayastedObjects[0].GetComponent<ConstantForce>().force = Camera.main.transform.TransformDirection(xForce * 1.5f, 0, zForce * 1.5f);
             }     
             
             // Whenever the mouse is released, get rid of the force
@@ -142,33 +137,25 @@ public class SelectNMoveObject : MonoBehaviour {
         return true;
     }
 
-    // Checks whether the block was touched or dragged, because if the screen was dragged, 
-    //      there is no need to select the block
-    void CheckIfWasATouch()
+    // Checks the distance between mouse down and up, if smaller than x, it was a touch 
+    bool CheckIfWasATouch()
     {
-        float posY = Input.mousePosition.y;
-        float posX = Input.mousePosition.x;
+        if (Input.GetMouseButtonDown(0))
+        {
+            downTouchPos = Input.mousePosition;
+            mouseDown = true;
+        }
 
         if (Input.GetMouseButtonUp(0))
-            firstTouch = false;
-
-        if (firstTouch == true)
         {
-            curTouchPos = new Vector2(posX, posY);
-            firstTouch = false;
-        }
-        else
-        {
-            prevTouchPos = new Vector2(curTouchPos.x, curTouchPos.y);
-            curTouchPos = new Vector2(posX, posY);
+            upTouchPos = Input.mousePosition;
 
-            float xTouchDiff = curTouchPos.x - prevTouchPos.x;
-            float yTouchDiff = curTouchPos.y - prevTouchPos.y;
-            Debug.Log(xTouchDiff);
-            if (Mathf.Abs(xTouchDiff) < 5 && Mathf.Abs(yTouchDiff) < 5)
-                isATouch = true;
-            else
-                isATouch = false;
+            if (Mathf.Abs(upTouchPos.x - downTouchPos.x) < 1f && Mathf.Abs(upTouchPos.y - downTouchPos.y) < 1f)
+            {                            
+                return true;
+            }
         }
+
+        return false;
     }
 }

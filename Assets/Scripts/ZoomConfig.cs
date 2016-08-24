@@ -42,7 +42,7 @@ public class ZoomConfig : MonoBehaviour
                 mainCam.orthographicSize += deltaMagnitudeDiff * orthoZoomSpeed;
 
                 // Make sure the orthographic size never drops below zero.
-                mainCam.orthographicSize = Mathf.Max(mainCam.orthographicSize, 1f);
+                mainCam.orthographicSize = Mathf.Max(mainCam.orthographicSize, 2.5f);
                 mainCam.orthographicSize = Mathf.Min(mainCam.orthographicSize, 10f);
             }
             else
@@ -51,7 +51,7 @@ public class ZoomConfig : MonoBehaviour
                 mainCam.fieldOfView += deltaMagnitudeDiff * perspectiveZoomSpeed;
 
                 // Clamp the field of view to make sure it's between 0 and 180.
-                mainCam.fieldOfView = Mathf.Clamp(mainCam.fieldOfView, 15f, 120f);
+                mainCam.fieldOfView = Mathf.Clamp(mainCam.fieldOfView, 30f, 120f);
             }
 
             MoveCam.canMoveTheCam = true; // Finished the zooming in (out) for this frame, thus can move (rotate) the camera

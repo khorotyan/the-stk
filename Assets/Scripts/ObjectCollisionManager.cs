@@ -28,7 +28,7 @@ public class ObjectCollisionManager : MonoBehaviour
 
             if (canPlaceAtTop == true)
             {
-                Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, SpawnStackerObjects.maxHeight + 3f, Camera.main.transform.position.z);
+                Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, SpawnStackerObjects.maxHeight + 2f, Camera.main.transform.position.z);
 
                 // Resets the force information
                 DestroyImmediate(gameObject.GetComponent<ConstantForce>());
@@ -43,7 +43,6 @@ public class ObjectCollisionManager : MonoBehaviour
                 SpawnStackerObjects.stackers.Add(gameObject);
 
                 SpawnStackerObjects.numOfExtractedObjs++;
-                SelectNMoveObject.canMoveTheObject = false;
                 noCollision = false;
                 canPlaceAtTop = false;
             }
@@ -53,6 +52,9 @@ public class ObjectCollisionManager : MonoBehaviour
     // Configures the position and the rotation of the objects that were extracted from the tower
     void ObjTopPlcManager()
     {
+        MoveCam.canMoveTheCam = true;
+        SelectNMoveObject.canMoveTheObject = false;
+
         gameObject.GetComponent<Rigidbody>().isKinematic = true;
         gameObject.GetComponent<Rigidbody>().isKinematic = false;
 
@@ -135,6 +137,8 @@ public class ObjectCollisionManager : MonoBehaviour
                 gameObject.transform.position = new Vector3(0 + pieceOfXPos, SpawnStackerObjects.maxHeight + 0.1f, -1.02f + pieceOfZPos);
                 gameObject.transform.eulerAngles = new Vector3(extraXRot, 0 + extraYRot, -extraZRot);
             }
+
+            SelectNMoveObject.canMoveTheObject = true;
         }       
     }
 

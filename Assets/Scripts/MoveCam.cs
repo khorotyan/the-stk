@@ -10,21 +10,9 @@ public class MoveCam : MonoBehaviour
     private Vector2 curTouchPos = new Vector2(0, 0);
     private Vector2 prevTouchPos = new Vector2(0, 0);
     private int touchCount = 0;
-    private float screenMoveSpeed = 15f;
+    private float screenMoveSpeed = 20f;
     private bool escapedFrame = false;
     private bool firstTouch = true;
-    private bool canCheckTheGesture = true;
-
-    /*
-    enum Gestures
-    {
-        none,
-        camUpAndDown,
-        camRotate
-    }
-
-    Gestures gestures = 0;
-    */
 
     void Awake()
     {
@@ -33,7 +21,7 @@ public class MoveCam : MonoBehaviour
 
 
     void Update()
-    {  
+    {
         ManualCamMovement();
     }
 
@@ -64,6 +52,12 @@ public class MoveCam : MonoBehaviour
                 float xTouchDiff = curTouchPos.x - prevTouchPos.x;
                 float yTouchDiff = curTouchPos.y - prevTouchPos.y;
 
+                // Stops the problem where after tapping the screen and then another place of the screen before 
+                //      the removal of the previously touched finger, the screen understands it as a rotation 
+                //      and camera move and it jumps from one location to a distant one 
+                if (Mathf.Abs(xTouchDiff) > Screen.width / 10 || Mathf.Abs(yTouchDiff) > Screen.height / 10)
+                    return;
+
                 if (yTouchDiff > 15)
                     yTouchDiff = 15;
                 else if (yTouchDiff < -15)
@@ -82,7 +76,7 @@ public class MoveCam : MonoBehaviour
                     Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, Camera.main.transform.position + new Vector3(0f , -yTouchDiff * screenMoveSpeed * Time.deltaTime, 0f), 0.05f);
 
                     // Rotate the camera around the objects
-                    transform.RotateAround(Vector3.zero, Vector3.up, xTouchDiff * 12.5f * Time.deltaTime);     
+                    transform.RotateAround(Vector3.zero, Vector3.up, xTouchDiff * 15f * Time.deltaTime);     
 
                     // Do not allow the camera to go behind the platform
                     if (Camera.main.transform.position.y < 3)
@@ -97,34 +91,4 @@ public class MoveCam : MonoBehaviour
             }   
         }
     }
-
-    /*
-    // Gets the fist touch and the 5th one and determines whether the user wants to rotate or move the camera
-    //      by comparing its x axis distance with the y axis distance
-    void DistinguishTheGesture()
-    {
-        if (canCheckTheGesture == true)
-        {
-            Vector2 firstTouch = new Vector2(0, 0);
-
-            if (touchCount == 0)
-                firstTouch = Input.mousePosition;
-
-            if (touchCount == 10)
-            {
-                touchCount = 0;
-
-                float xDist = Mathf.Abs(firstTouch.x - touchPos.x);
-                float yDist = Mathf.Abs(firstTouch.y - touchPos.y);
-
-                Debug.Log(xDist + " " + yDist);
-                gestures = yDist > xDist ? Gestures.camUpAndDown : Gestures.camRotate;
-                Debug.Log(gestures);
-                canCheckTheGesture = false;
-            }
-
-            touchCount++;
-        }
-    }
-    */
 }
