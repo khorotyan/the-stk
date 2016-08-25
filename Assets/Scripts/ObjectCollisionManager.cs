@@ -3,11 +3,10 @@ using System.Collections;
 
 public class ObjectCollisionManager : MonoBehaviour
 {
-    private Collider lastCollider = null;
-
     private int collisionCount = 0;
     private bool noCollision = false;
     private bool canPlaceAtTop = false;
+    private bool comboScNCoinAdded = false;
 
 	void Start ()
     {
@@ -55,6 +54,18 @@ public class ObjectCollisionManager : MonoBehaviour
         MoveCam.canMoveTheCam = true;
         SelectNMoveObject.canMoveTheObject = false;
 
+        if (comboScNCoinAdded == false)
+        {
+            ComboManager.currentCombo++; // + 1 Combo
+            ComboManager.comboSlider.value = ComboManager.comboTimerLength; // Resets the combo timer
+
+            ScoreManage.currentScore += ScoreManage.scorePerPlacement * ComboManager.currentMultiplier;
+
+            CoinManager.currentCoins += CoinManager.coinsPerPlacement * ComboManager.currentMultiplier;
+
+            comboScNCoinAdded = true;
+        }
+
         gameObject.GetComponent<Rigidbody>().isKinematic = true;
         gameObject.GetComponent<Rigidbody>().isKinematic = false;
 
@@ -64,6 +75,8 @@ public class ObjectCollisionManager : MonoBehaviour
 
         if (canPlaceAtTop == true)
         {
+            comboScNCoinAdded = false;
+
             if (SpawnStackerObjects.numOfExtractedObjs % 6 == 0)
             {
                 float extraXRot = SpawnStackerObjects.stackers[52].transform.eulerAngles.x;
@@ -159,7 +172,6 @@ public class ObjectCollisionManager : MonoBehaviour
             collisionCount--;
 
         noCollision = true;
-        lastCollider = collider;
     }
 
     IEnumerator WaitBeforePlace()

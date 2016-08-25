@@ -9,7 +9,6 @@ public class MoveCam : MonoBehaviour
 
     private Vector2 curTouchPos = new Vector2(0, 0);
     private Vector2 prevTouchPos = new Vector2(0, 0);
-    private int touchCount = 0;
     private float screenMoveSpeed = 20f;
     private bool escapedFrame = false;
     private bool firstTouch = true;
@@ -55,7 +54,7 @@ public class MoveCam : MonoBehaviour
                 // Stops the problem where after tapping the screen and then another place of the screen before 
                 //      the removal of the previously touched finger, the screen understands it as a rotation 
                 //      and camera move and it jumps from one location to a distant one 
-                if (Mathf.Abs(xTouchDiff) > Screen.width / 10 || Mathf.Abs(yTouchDiff) > Screen.height / 10)
+                if (Mathf.Abs(xTouchDiff) > Screen.width / 5 || Mathf.Abs(yTouchDiff) > Screen.height / 5)
                     return;
 
                 if (yTouchDiff > 15)

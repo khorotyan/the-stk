@@ -55,8 +55,11 @@ public class SpawnStackerObjects : MonoBehaviour
 
     public void RestartScene()
     {
+        SelectNMoveObject.canMoveTheObject = true;
         numOfExtractedObjs = 0;
         maxHeight = 0;
+
+        ResetCombosScoreNCoins();
 
         RebuildTheTower();
     }
@@ -64,39 +67,22 @@ public class SpawnStackerObjects : MonoBehaviour
     // Whenever the game is reset, the objects get back to their place and we reset all the information about them
     void RebuildTheTower()
     {
-        float height = 0;
+        stackers.Clear();
 
-        for (int i = 0; i < 9; i++)
-        {
-            stackers[6 * i].transform.position = new Vector3(-1.02f, height, 0);
-            stackers[6 * i].transform.rotation = Quaternion.Euler(0, 90, 0);
+        foreach (Transform child in stackerObjParent)
+            Destroy(child.gameObject);
 
-            stackers[6 * i + 1].transform.position = new Vector3(0, height, 0);
-            stackers[6 * i + 1].transform.rotation = Quaternion.Euler(0, 90, 0);
+        SpawnObjects();
+    }
 
-            stackers[6 * i + 2].transform.position = new Vector3(1.02f, height, 0);
-            stackers[6 * i + 2].transform.rotation = Quaternion.Euler(0, 90, 0);
+    void ResetCombosScoreNCoins()
+    {
+        ComboManager.currentMultiplier = 1;
+        ComboManager.currentCombo = 0;
+        ComboManager.comboSlider.value = 0;
 
-            maxHeight += 0.5f;
-            height += Random.Range(0.51f, 0.64f);
+        ScoreManage.currentScore = 0;
 
-            stackers[6 * i + 3].transform.position = new Vector3(0, height, -1.02f);
-            stackers[6 * i + 3].transform.rotation = Quaternion.Euler(0, 0, 0);
-
-            stackers[6 * i + 4].transform.position = new Vector3(0, height, 0);
-            stackers[6 * i + 4].transform.rotation = Quaternion.Euler(0, 0, 0);
-
-            stackers[6 * i + 5].transform.position = new Vector3(0, height, 1.02f);
-            stackers[6 * i + 5].transform.rotation = Quaternion.Euler(0, 0, 0);
-
-            maxHeight += 0.5f;
-            height += Random.Range(0.5f, 0.64f);
-        }
-
-        for (int i = 0; i < 54; i++)
-        {
-            stackers[i].GetComponent<Rigidbody>().isKinematic = true;
-            stackers[i].GetComponent<Rigidbody>().isKinematic = false;
-        }
+        CoinManager.currentCoins = 0;
     }
 }

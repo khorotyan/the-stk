@@ -13,10 +13,7 @@ public class SelectNMoveObject : MonoBehaviour {
     private Vector2 forceStartPos;
     private Vector2 forceEndPos;
     private bool mouseDown = false;
-    private TouchedThings touchedThings = TouchedThings.none;
     private List<GameObject> rayastedObjects = new List<GameObject>();
-
-    enum TouchedThings { none, background, stackerObject }
 
     void Start ()
     {
