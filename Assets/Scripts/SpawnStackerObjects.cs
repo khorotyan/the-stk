@@ -82,7 +82,5 @@ public class SpawnStackerObjects : MonoBehaviour
         ComboManager.comboSlider.value = 0;
 
         ScoreManage.currentScore = 0;
-
-        CoinManager.currentCoins = 0;
     }
 }

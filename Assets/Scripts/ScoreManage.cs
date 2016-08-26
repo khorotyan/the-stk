@@ -11,8 +11,8 @@ public class ScoreManage : MonoBehaviour
 
 	void Start ()
     {
-	    
-	}
+
+    }
 	
 	void Update ()
     {

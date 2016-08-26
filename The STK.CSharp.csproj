@@ -72,8 +72,11 @@
     <Compile Include="Assets\OneMinuteGui\Scripts\MenuManager.cs" />
     <Compile Include="Assets\Scripts\CoinManager.cs" />
     <Compile Include="Assets\Scripts\ComboManager.cs" />
+    <Compile Include="Assets\Scripts\GameOverManager.cs" />
+    <Compile Include="Assets\Scripts\LoadManager.cs" />
     <Compile Include="Assets\Scripts\MoveCam.cs" />
     <Compile Include="Assets\Scripts\ObjectCollisionManager.cs" />
+    <Compile Include="Assets\Scripts\SaveManager.cs" />
     <Compile Include="Assets\Scripts\ScoreManage.cs" />
     <Compile Include="Assets\Scripts\SelectNMoveObject.cs" />
     <Compile Include="Assets\Scripts\SpawnStackerObjects.cs" />

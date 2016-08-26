@@ -3,15 +3,19 @@ using System.Collections;
 
 public class ObjectCollisionManager : MonoBehaviour
 {
+    private GameOverManager gom;
+
     private int collisionCount = 0;
     private bool noCollision = false;
     private bool canPlaceAtTop = false;
-    private bool comboScNCoinAdded = false;
+    private bool itemJustGotOut = false;
+    private bool canCheckGameOver = false;
 
-	void Start ()
+	void Awake ()
     {
-	
-	}
+        GameObject scriptManager = GameObject.Find("ScriptManager");
+        gom = scriptManager.GetComponent<GameOverManager>();
+    }
 	
 	void Update ()
     {
@@ -27,7 +31,7 @@ public class ObjectCollisionManager : MonoBehaviour
 
             if (canPlaceAtTop == true)
             {
-                Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, SpawnStackerObjects.maxHeight + 2f, Camera.main.transform.position.z);
+                Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, SpawnStackerObjects.maxHeight + 1f, Camera.main.transform.position.z);
 
                 // Resets the force information
                 DestroyImmediate(gameObject.GetComponent<ConstantForce>());
@@ -54,16 +58,12 @@ public class ObjectCollisionManager : MonoBehaviour
         MoveCam.canMoveTheCam = true;
         SelectNMoveObject.canMoveTheObject = false;
 
-        if (comboScNCoinAdded == false)
+        if (itemJustGotOut == false)
         {
             ComboManager.currentCombo++; // + 1 Combo
             ComboManager.comboSlider.value = ComboManager.comboTimerLength; // Resets the combo timer
 
-            ScoreManage.currentScore += ScoreManage.scorePerPlacement * ComboManager.currentMultiplier;
-
-            CoinManager.currentCoins += CoinManager.coinsPerPlacement * ComboManager.currentMultiplier;
-
-            comboScNCoinAdded = true;
+            itemJustGotOut = true;
         }
 
         gameObject.GetComponent<Rigidbody>().isKinematic = true;
@@ -73,9 +73,14 @@ public class ObjectCollisionManager : MonoBehaviour
 
         StartCoroutine(WaitBeforePlace());
 
+        // The extracted item can now be put on top of the tower
         if (canPlaceAtTop == true)
         {
-            comboScNCoinAdded = false;
+            // Can Add the score and the coins for putting the object
+            ScoreManage.currentScore += ScoreManage.scorePerPlacement * ComboManager.currentMultiplier;
+            CoinManager.currentCoins += CoinManager.coinsPerPlacement * ComboManager.currentMultiplier;
+
+            itemJustGotOut = false;
 
             if (SpawnStackerObjects.numOfExtractedObjs % 6 == 0)
             {
@@ -155,6 +160,17 @@ public class ObjectCollisionManager : MonoBehaviour
         }       
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        StartCoroutine(WaitUntillGameOverCheck());
+        
+        // The Game is Over
+        if (canCheckGameOver == true && collision.collider.tag == "Background")
+        {
+            gom.ManageGameOver();
+        }
+    }
+
     void OnTriggerEnter(Collider collider)
     {
         if (collider.tag == "StackerObject")
@@ -176,7 +192,13 @@ public class ObjectCollisionManager : MonoBehaviour
 
     IEnumerator WaitBeforePlace()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.2f);
         canPlaceAtTop = true;
+    }
+
+    IEnumerator WaitUntillGameOverCheck()
+    {
+        yield return new WaitForSeconds(1f);
+        canCheckGameOver = true;
     }
 }
