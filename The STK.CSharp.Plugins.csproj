@@ -5,16 +5,16 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{09BAAE8F-8E85-9D5C-27BB-4B8106ED0E1F}</ProjectGuid>
+    <ProjectGuid>{A1678179-03AF-9710-B9A3-813954D78402}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AssemblyName>Assembly-CSharp</AssemblyName>
+    <AssemblyName>Assembly-CSharp-firstpass</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
     <CompilerResponseFile></CompilerResponseFile>
-    <UnityProjectType>Game:1</UnityProjectType>
+    <UnityProjectType>GamePlugins:3</UnityProjectType>
     <UnityBuildTarget>Android:13</UnityBuildTarget>
     <UnityVersion>5.4.0f3</UnityVersion>
     <RootNamespace></RootNamespace>
@@ -75,27 +75,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Easy Save 2\ES2Init.cs" />
-    <Compile Include="Assets\Easy Save 2\Examples\Creating an Automatic Save Structure\ES2UniqueID.cs" />
-    <Compile Include="Assets\Easy Save 2\Examples\Creating an Automatic Save Structure\UniqueGameLogic.cs" />
-    <Compile Include="Assets\Easy Save 2\Examples\Creating an Automatic Save Structure\UniqueObjectManager.cs" />
-    <Compile Include="Assets\Easy Save 2\Examples\Creating an Automatic Save Structure\UniqueSaveManager.cs" />
-    <Compile Include="Assets\Easy Save 2\Examples\Save and Load Prefabs Instantiated at Runtime\PrefabManager.cs" />
-    <Compile Include="Assets\Easy Save 2\Examples\Shared Assets\Scripts\MyExampleScript.cs" />
-    <Compile Include="Assets\Easy Save 2\Examples\Upload and Download a Texture\UploadDownloadTexture.cs" />
-    <Compile Include="Assets\Easy Save 2\Types\ES2_Sprite.cs" />
-    <Compile Include="Assets\OneMinuteGui\Scripts\MenuManager.cs" />
-    <Compile Include="Assets\Scripts\CoinManager.cs" />
-    <Compile Include="Assets\Scripts\ComboManager.cs" />
-    <Compile Include="Assets\Scripts\GameOverManager.cs" />
-    <Compile Include="Assets\Scripts\LoadManager.cs" />
-    <Compile Include="Assets\Scripts\MoveCam.cs" />
-    <Compile Include="Assets\Scripts\ObjectCollisionManager.cs" />
-    <Compile Include="Assets\Scripts\SaveManager.cs" />
-    <Compile Include="Assets\Scripts\ScoreManage.cs" />
-    <Compile Include="Assets\Scripts\SelectNMoveObject.cs" />
-    <Compile Include="Assets\Scripts\SpawnStackerObjects.cs" />
-    <Compile Include="Assets\Scripts\ZoomConfig.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 2\ES2Init.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 2\Types\ES2_Sprite.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Easy Save 2\changelog.txt" />

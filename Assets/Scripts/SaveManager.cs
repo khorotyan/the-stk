@@ -13,4 +13,15 @@ public class SaveManager : MonoBehaviour
     {
 	
 	}
+
+    public void SaveAll()
+    {
+        ES2.Save(CoinManager.currentCoins, "savas.txt?tag=coins");
+        ES2.Save(ScoreManage.highestScore, "savas.txt?tag=highestScore");
+    }
+
+    void OnApplicationQuit()
+    {
+        SaveAll();
+    }
 }

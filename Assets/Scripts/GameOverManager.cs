@@ -39,10 +39,17 @@ public class GameOverManager : MonoBehaviour
 
     void IfGameOver()
     {
-        
-
-        Time.timeScale = 0;
         currentScore.text = "Score:  " + ScoreManage.currentScore;
+
+        if (ScoreManage.highestScore < ScoreManage.currentScore)
+        {
+            ScoreManage.highestScore = ScoreManage.currentScore;
+            highestScore.text = "New Highscore:  " + ScoreManage.highestScore;
+        }
+        else
+            highestScore.text = "Highest Score:  " + ScoreManage.highestScore;
+
+        Time.timeScale = 0;       
     }
 
     void IfNotGameOver()

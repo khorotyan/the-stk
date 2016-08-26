@@ -8,6 +8,7 @@ public class ScoreManage : MonoBehaviour
 
     public static int currentScore = 0;
     public static int scorePerPlacement = 5;
+    public static int highestScore = 0;
 
 	void Start ()
     {
@@ -17,7 +18,6 @@ public class ScoreManage : MonoBehaviour
 	void Update ()
     {
         ManageScores();
-
     }
 
     void ManageScores()
