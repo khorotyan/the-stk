@@ -12,6 +12,7 @@ public class MoveCam : MonoBehaviour
     private float screenMoveSpeed = 20f;
     private bool escapedFrame = false;
     private bool firstTouch = true;
+    private float nthFrameChecker = 15f;
 
     void Awake()
     {
@@ -31,7 +32,10 @@ public class MoveCam : MonoBehaviour
     {
         // If we release the mouse, start the whole process from the beginning
         if (Input.GetMouseButtonUp(0))
+        {
             firstTouch = true;
+            nthFrameChecker = 10;
+        }
 
         if (canMoveTheCam == true && Input.GetMouseButton(0))
         {
@@ -43,7 +47,19 @@ public class MoveCam : MonoBehaviour
                 curTouchPos = new Vector2(posX, posY);
                 firstTouch = false;
             }
-            else
+            else if (nthFrameChecker > 0)
+            {
+                nthFrameChecker--;
+
+                if (nthFrameChecker == 0)
+                {
+                    if (Mathf.Abs(Input.mousePosition.x - curTouchPos.x) < Screen.width / 15 && Mathf.Abs(Input.mousePosition.y - curTouchPos.y) < Screen.width / 15)
+                        firstTouch = true;
+                    
+                }
+                    
+            }
+            else if (firstTouch == false && nthFrameChecker == 0)
             {
                 prevTouchPos = new Vector2(curTouchPos.x, curTouchPos.y);
                 curTouchPos = new Vector2(posX, posY);
@@ -54,7 +70,7 @@ public class MoveCam : MonoBehaviour
                 // Stops the problem where after tapping the screen and then another place of the screen before 
                 //      the removal of the previously touched finger, the screen understands it as a rotation 
                 //      and camera move and it jumps from one location to a distant one 
-                if (Mathf.Abs(xTouchDiff) > Screen.width / 5 || Mathf.Abs(yTouchDiff) > Screen.height / 5)
+                if (Mathf.Abs(xTouchDiff) > Screen.width / 3 || Mathf.Abs(yTouchDiff) > Screen.height / 3)
                     return;
 
                 if (yTouchDiff > 15)

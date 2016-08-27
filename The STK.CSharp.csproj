@@ -67,11 +67,11 @@
     <Reference Include="UnityEditor.iOS.Extensions.Common">
       <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Common.dll</HintPath>
     </Reference>
-    <Reference Include="MoodkieSecurity">
-      <HintPath>Assets\Plugins\MoodkieSecurity.dll</HintPath>
-    </Reference>
     <Reference Include="ES2">
       <HintPath>Assets\Plugins\ES2.dll</HintPath>
+    </Reference>
+    <Reference Include="MoodkieSecurity">
+      <HintPath>Assets\Plugins\MoodkieSecurity.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -87,10 +87,14 @@
     <Compile Include="Assets\OneMinuteGui\Scripts\MenuManager.cs" />
     <Compile Include="Assets\Scripts\CoinManager.cs" />
     <Compile Include="Assets\Scripts\ComboManager.cs" />
+    <Compile Include="Assets\Scripts\DisplayHighscores.cs" />
     <Compile Include="Assets\Scripts\GameOverManager.cs" />
     <Compile Include="Assets\Scripts\LoadManager.cs" />
+    <Compile Include="Assets\Scripts\MainMenuAnimConfig.cs" />
+    <Compile Include="Assets\Scripts\MainMenuConfig.cs" />
     <Compile Include="Assets\Scripts\MoveCam.cs" />
     <Compile Include="Assets\Scripts\ObjectCollisionManager.cs" />
+    <Compile Include="Assets\Scripts\OnlineHighscores.cs" />
     <Compile Include="Assets\Scripts\SaveManager.cs" />
     <Compile Include="Assets\Scripts\ScoreManage.cs" />
     <Compile Include="Assets\Scripts\SelectNMoveObject.cs" />

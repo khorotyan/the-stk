@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class GameOverManager : MonoBehaviour
@@ -54,6 +55,12 @@ public class GameOverManager : MonoBehaviour
 
     void IfNotGameOver()
     {
+        Time.timeScale = 1;
+    }
+
+    public void OnMainMenuClick()
+    {
+        SceneManager.LoadScene("MainMenu");
         Time.timeScale = 1;
     }
 }

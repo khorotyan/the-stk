@@ -12,7 +12,6 @@ public class SelectNMoveObject : MonoBehaviour {
     private Vector2 upTouchPos = Vector2.zero;
     private Vector2 forceStartPos;
     private Vector2 forceEndPos;
-    private bool mouseDown = false;
     private List<GameObject> rayastedObjects = new List<GameObject>();
 
     void Start ()
@@ -49,12 +48,20 @@ public class SelectNMoveObject : MonoBehaviour {
         {
             // If we previously raycasted an object or tabbed another object, 
             //      change its material to a normal one (unselected) and remove it from list
-            if (rayastedObjects.Count > 0 && CheckIfWasATouch() == true && mouseDown == true)
+            if (rayastedObjects.Count > 0 && CheckIfWasATouch() == true)
             {
                 rayastedObjects[0].transform.gameObject.GetComponent<Renderer>().material = normalObjMaterial;
+
+                // Resets other physics information
+                rayastedObjects[0].GetComponent<Rigidbody>().isKinematic = true;
+                rayastedObjects[0].GetComponent<Rigidbody>().isKinematic = false;
+
+                // Resets the force information
+                DestroyImmediate(rayastedObjects[0].GetComponent<ConstantForce>());
+                rayastedObjects[0].AddComponent<ConstantForce>();
+
                 rayastedObjects.Remove(rayastedObjects[0]);
                 MoveCam.canMoveTheCam = true;
-                mouseDown = false;
             }
 
             // If our raycast hits the StackerObject, change its material to the selected one and add it to the list
@@ -67,7 +74,6 @@ public class SelectNMoveObject : MonoBehaviour {
                     hit.transform.gameObject.GetComponent<Renderer>().material = selectedObjMaterial;
                     forceStartPos = Input.mousePosition;
                     rayastedObjects.Add(hit.transform.gameObject);
-                    mouseDown = false;
                 }
             }
 
@@ -92,13 +98,7 @@ public class SelectNMoveObject : MonoBehaviour {
 
                 // Apply force based on the transform of the camera, in this case, the direction it is facing
                 rayastedObjects[0].GetComponent<ConstantForce>().force = Camera.main.transform.TransformDirection(xForce * 1.5f, 0, zForce * 1.5f);
-            }     
-            
-            // Whenever the mouse is released, get rid of the force
-            if (Input.GetMouseButtonUp(0))
-            {
-                rayastedObjects[0].GetComponent<ConstantForce>().force = Vector3.zero;
-            }       
+            }
         }     
     }
 
@@ -137,19 +137,38 @@ public class SelectNMoveObject : MonoBehaviour {
     // Checks the distance between mouse down and up, if smaller than x, it was a touch 
     bool CheckIfWasATouch()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Application.isMobilePlatform)
         {
-            downTouchPos = Input.mousePosition;
-            mouseDown = true;
+            if (Input.GetMouseButtonDown(0))
+            {
+                downTouchPos = Input.mousePosition;
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                upTouchPos = Input.mousePosition;
+
+                if (Mathf.Abs(upTouchPos.x - downTouchPos.x) < Screen.width / 25 && Mathf.Abs(upTouchPos.y - downTouchPos.y) < Screen.width / 25)
+                {
+                    return true;
+                }
+            }
         }
-
-        if (Input.GetMouseButtonUp(0))
+        else
         {
-            upTouchPos = Input.mousePosition;
+            if (Input.GetMouseButtonDown(0))
+            {
+                downTouchPos = Input.mousePosition;
+            }
 
-            if (Mathf.Abs(upTouchPos.x - downTouchPos.x) < 1f && Mathf.Abs(upTouchPos.y - downTouchPos.y) < 1f)
-            {                            
-                return true;
+            if (Input.GetMouseButtonUp(0))
+            {
+                upTouchPos = Input.mousePosition;
+
+                if (Mathf.Abs(upTouchPos.x - downTouchPos.x) < 1f && Mathf.Abs(upTouchPos.y - downTouchPos.y) < 1f)
+                {
+                    return true;
+                }
             }
         }
 
