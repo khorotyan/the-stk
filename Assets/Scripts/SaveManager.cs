@@ -21,20 +21,21 @@ public class SaveManager : MonoBehaviour
         {
             ES2.Save(CoinManager.currentCoins, "savas.txt?tag=coins");
             ES2.Save(ScoreManage.highestScore, "savas.txt?tag=highestScore");
+            ES2.Save(StaticContainer.username, "savas.txt?tag=username");
         }
     }
 
-    public void SaveAllMainMenu()
+    public static void SaveAllMainMenu()
     {
         if (SceneManager.GetActiveScene().name == "MainMenu")
         {
-            ES2.Save(CoinManager.currentCoins, "savas.txt?tag=coins");
-            ES2.Save(ScoreManage.highestScore, "savas.txt?tag=highestScore");
+            ES2.Save(StaticContainer.username, "savas.txt?tag=username");
         }
     }
 
     void OnApplicationQuit()
     {
         SaveAllMainScene();
+        SaveAllMainMenu();
     }
 }

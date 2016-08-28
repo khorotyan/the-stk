@@ -9,13 +9,12 @@ public class GameOverManager : MonoBehaviour
     public GameObject mainPanel;
     public Text highestScore;
     public Text currentScore;
-    public InputField nameInputField;
 
     private bool isGameOver = false;
 
 	void Start ()
     {
-        nameInputField.characterLimit = 15;
+
 	}
 	
 	void Update ()
@@ -70,9 +69,6 @@ public class GameOverManager : MonoBehaviour
     
     public void UploadScores()
     {
-        if (nameInputField.text == "" || nameInputField.text == null)
-            OnlineHighscores.AddNewHighscore("Player", ScoreManage.currentScore);
-        else
-            OnlineHighscores.AddNewHighscore(nameInputField.text, ScoreManage.currentScore);
+        OnlineHighscores.AddNewHighscore(StaticContainer.username, ScoreManage.currentScore);
     }
 }

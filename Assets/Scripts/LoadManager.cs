@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class LoadManager : MonoBehaviour
 {
+    public InputField usernameInputField;
 
 	void Awake ()
     {
         LoadAllMainScene();
+        LoadAllMainMenu();
 	}
 	
 	void Update ()
@@ -31,11 +34,11 @@ public class LoadManager : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "MainMenu")
         {
-            if (ES2.Exists("savas.txt?tag=coins"))
-                CoinManager.currentCoins = ES2.Load<int>("savas.txt?tag=coins");
-
-            if (ES2.Exists("savas.txt?tag=highestScore"))
-                ScoreManage.highestScore = ES2.Load<int>("savas.txt?tag=highestScore");
+            if (ES2.Exists("savas.txt?tag=username"))
+            {
+                StaticContainer.username = ES2.Load<string>("savas.txt?tag=username");
+                usernameInputField.text = StaticContainer.username;
+            }
         }
     }
 }

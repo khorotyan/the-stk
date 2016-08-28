@@ -98,8 +98,9 @@
     <Compile Include="Assets\Scripts\SaveManager.cs" />
     <Compile Include="Assets\Scripts\ScoreManage.cs" />
     <Compile Include="Assets\Scripts\SelectNMoveObject.cs" />
-    <Compile Include="Assets\Scripts\SettingsManage.cs" />
+    <Compile Include="Assets\Scripts\SettingsManager.cs" />
     <Compile Include="Assets\Scripts\SpawnStackerObjects.cs" />
+    <Compile Include="Assets\Scripts\StaticContainer.cs" />
     <Compile Include="Assets\Scripts\ZoomConfig.cs" />
   </ItemGroup>
   <ItemGroup>
