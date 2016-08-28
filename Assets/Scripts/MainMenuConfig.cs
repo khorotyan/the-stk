@@ -5,11 +5,10 @@ using System.Collections;
 public class MainMenuConfig : MonoBehaviour
 {
 
-	
-	void Start ()
+    void Awake ()
     {
-	
-	}
+
+    }
 	
 	void Update ()
     {

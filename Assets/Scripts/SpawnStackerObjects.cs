@@ -12,7 +12,7 @@ public class SpawnStackerObjects : MonoBehaviour
 
     void Start ()
     {
-        SpawnObjects();
+        RestartScene();
     }
 	
 	void Update ()

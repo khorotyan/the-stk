@@ -3,16 +3,23 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class DisplayHighscores : MonoBehaviour
-{
-    public Text[] names;
-    public Text[] scores;
+{   
+    public GameObject scorePlaceholder;
+    public GameObject scPlcParent;
     OnlineHighscores highscoreManager;
 
-	void Start ()
+    private GameObject[] scoresNNamesParent = new GameObject[100];
+
+    void Start ()
     {
-        for (int i = 0; i < names.Length; i++)
+        for (int i = 0; i < 100; i++)
         {
-            names[i].text = (i + 1) + ". Retrieving Data ...";
+            GameObject tempPlScores = Instantiate(scorePlaceholder, scPlcParent.transform) as GameObject;
+            tempPlScores.transform.localScale = Vector3.one;
+
+            scoresNNamesParent[i] = tempPlScores;
+
+            tempPlScores.transform.GetChild(0).GetComponent<Text>().text = (i + 1) + ". Retrieving Data ...";
         }
 
         highscoreManager = GetComponent<OnlineHighscores>();
@@ -22,13 +29,14 @@ public class DisplayHighscores : MonoBehaviour
 	
 	public void OnHighscoresDownloaded(Highscore[] highscoreList)
     {
-        for (int i = 0; i < names.Length; i++)
+        for (int i = 0; i < 100; i++)
         {
-            names[i].text = (i + 1) + ". ";
+            scoresNNamesParent[i].transform.GetChild(0).GetComponent<Text>().text = (i + 1) + ".  ";
+
             if (highscoreList.Length > i)
             {
-                names[i].text += highscoreList[i].username + " ";
-                scores[i].text = highscoreList[i].score + "";
+                scoresNNamesParent[i].transform.GetChild(0).GetComponent<Text>().text += highscoreList[i].username + " ";
+                scoresNNamesParent[i].transform.GetChild(1).GetComponent<Text>().text = highscoreList[i].score + "";
             }
         }
     }

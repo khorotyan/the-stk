@@ -15,7 +15,9 @@ public class OnlineHighscores : MonoBehaviour
     void Awake()
     {
         instance = this;
-        displayHighscores = GetComponent<DisplayHighscores>();
+
+        if (SceneManager.GetActiveScene().name == "LeaderboardScene")
+            displayHighscores = GetComponent<DisplayHighscores>();
     }
 
     public static void AddNewHighscore(string username, int score)
@@ -40,7 +42,8 @@ public class OnlineHighscores : MonoBehaviour
 
     public void DownloadHighscores()
     {
-        StartCoroutine(DownloadHighscoreFromDatabase());
+        if (SceneManager.GetActiveScene().name == "LeaderboardScene")
+            StartCoroutine(DownloadHighscoreFromDatabase());
     }
 
     IEnumerator DownloadHighscoreFromDatabase()
