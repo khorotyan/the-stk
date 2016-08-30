@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class ScoreManage : MonoBehaviour
@@ -17,7 +18,8 @@ public class ScoreManage : MonoBehaviour
 	
 	void Update ()
     {
-        ManageScores();
+        if (SceneManager.GetActiveScene().name == "MainScene")
+            ManageScores();
     }
 
     void ManageScores()

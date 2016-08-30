@@ -5,8 +5,8 @@ public class StaticContainer : MonoBehaviour
 {
     public static string username = "Player";
 
-    void Update()
+    void Start()
     {
-        Debug.Log(username);
+        Debug.Log(ScoreManage.highestScore);
     }
 }

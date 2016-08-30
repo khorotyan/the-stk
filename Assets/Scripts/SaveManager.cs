@@ -15,7 +15,7 @@ public class SaveManager : MonoBehaviour
 	
 	}
 
-    public void SaveAllMainScene()
+    public static void SaveAllMainScene()
     {
         if (SceneManager.GetActiveScene().name == "MainScene")
         {

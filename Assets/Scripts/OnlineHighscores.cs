@@ -4,11 +4,11 @@ using System.Collections;
 
 public class OnlineHighscores : MonoBehaviour
 {
-    const string privateCode = "7z9DM2tx5UWnGxra7FyyRgcynr-SCcQ0qChicF76v3Jw";
-    const string publicCode = "57c13d0d8af603118c7bceb4";
-    const string webURL = "http://dreamlo.com/lb/";
+    public static string privateCode = "7z9DM2tx5UWnGxra7FyyRgcynr-SCcQ0qChicF76v3Jw";
+    public static string publicCode = "57c13d0d8af603118c7bceb4";
+    public static string webURL = "http://dreamlo.com/lb/";
 
-    public Highscore[] highscoreList;
+    public static Highscore[] highscoreList = new Highscore[0];
     static OnlineHighscores instance;
     DisplayHighscores displayHighscores;
 
@@ -33,17 +33,36 @@ public class OnlineHighscores : MonoBehaviour
 
         if (string.IsNullOrEmpty(www.error))
         {
-            print("Success");
+            print("Success Uploading");
             DownloadHighscores();
         }
         else
             print("Error Uploading " + www.error);
     }
 
-    public void DownloadHighscores()
+    public static void DeleteHighscore(string username)
     {
-        if (SceneManager.GetActiveScene().name == "LeaderboardScene")
-            StartCoroutine(DownloadHighscoreFromDatabase());
+        instance.StartCoroutine(instance.DeleteHighscoresFromDatabase(username));
+    }
+
+    // Coroutine is used because uploading to the database is not instantanious
+    IEnumerator DeleteHighscoresFromDatabase(string username)
+    {
+        WWW www = new WWW(webURL + privateCode + "/delete/" + WWW.EscapeURL(username));
+        yield return www;
+
+        if (string.IsNullOrEmpty(www.error))
+        {
+            print("Success Deleting");
+            DownloadHighscores();
+        }
+        else
+            print("Error Deleting " + www.error);
+    }
+
+    public static void DownloadHighscores()
+    {
+        instance.StartCoroutine(instance.DownloadHighscoreFromDatabase());
     }
 
     IEnumerator DownloadHighscoreFromDatabase()
@@ -52,9 +71,10 @@ public class OnlineHighscores : MonoBehaviour
         yield return www; // Wait for www to finish getting the scores
 
         if (string.IsNullOrEmpty(www.error))
-        {
+        {           
             FormatHighscores(www.text);
-            displayHighscores.OnHighscoresDownloaded(highscoreList);
+            if (SceneManager.GetActiveScene().name == "LeaderboardScene")
+                displayHighscores.OnHighscoresDownloaded(highscoreList);
         }
         else
             print("Error Downloading " + www.error);

@@ -6,7 +6,6 @@ public class DisplayHighscores : MonoBehaviour
 {   
     public GameObject scorePlaceholder;
     public GameObject scPlcParent;
-    OnlineHighscores highscoreManager;
 
     private GameObject[] scoresNNamesParent = new GameObject[100];
 
@@ -22,12 +21,10 @@ public class DisplayHighscores : MonoBehaviour
             tempPlScores.transform.GetChild(0).GetComponent<Text>().text = (i + 1) + ". Retrieving Data ...";
         }
 
-        highscoreManager = GetComponent<OnlineHighscores>();
-
         StartCoroutine(RefreshHighscores());
     }
 	
-	public void OnHighscoresDownloaded(Highscore[] highscoreList)
+	public void OnHighscoresDownloaded( Highscore[] highscoreList)
     {
         for (int i = 0; i < 100; i++)
         {
@@ -45,7 +42,7 @@ public class DisplayHighscores : MonoBehaviour
     {
         while (true)
         {
-            highscoreManager.DownloadHighscores();
+            OnlineHighscores.DownloadHighscores();
             yield return new WaitForSeconds(30);
         }
     }

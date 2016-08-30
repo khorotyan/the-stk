@@ -4,11 +4,6 @@ using System.Collections;
 
 public class MainMenuConfig : MonoBehaviour
 {
-
-    void Awake ()
-    {
-
-    }
 	
 	void Update ()
     {

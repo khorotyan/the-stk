@@ -9,14 +9,21 @@ public class LoadManager : MonoBehaviour
 
 	void Awake ()
     {
+        GeneralLoad();
         LoadAllMainScene();
         LoadAllMainMenu();
 	}
 	
 	void Update ()
     {
-	
+	     
 	}
+
+    public void GeneralLoad()
+    {
+        if (ES2.Exists("savas.txt?tag=highestScore"))
+            ScoreManage.highestScore = ES2.Load<int>("savas.txt?tag=highestScore");
+    }
 
     public void LoadAllMainScene()
     {
@@ -24,9 +31,7 @@ public class LoadManager : MonoBehaviour
         {
             if (ES2.Exists("savas.txt?tag=coins"))
                 CoinManager.currentCoins = ES2.Load<int>("savas.txt?tag=coins");
-
-            if (ES2.Exists("savas.txt?tag=highestScore"))
-                ScoreManage.highestScore = ES2.Load<int>("savas.txt?tag=highestScore");
+   
         }
     }
 

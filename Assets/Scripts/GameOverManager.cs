@@ -48,6 +48,7 @@ public class GameOverManager : MonoBehaviour
         if (ScoreManage.highestScore < ScoreManage.currentScore)
         {
             ScoreManage.highestScore = ScoreManage.currentScore;
+            SaveManager.SaveAllMainScene();
             highestScore.text = "New Highscore:  " + ScoreManage.highestScore;
         }
         else
