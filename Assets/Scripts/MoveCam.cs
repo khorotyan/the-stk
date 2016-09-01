@@ -12,7 +12,6 @@ public class MoveCam : MonoBehaviour
     private float screenMoveSpeed = 20f;
     private bool escapedFrame = false;
     private bool firstTouch = true;
-    private float nthFrameChecker = 15f;
 
     void Awake()
     {
@@ -34,7 +33,6 @@ public class MoveCam : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             firstTouch = true;
-            nthFrameChecker = 10;
         }
 
         if (canMoveTheCam == true && Input.GetMouseButton(0))
@@ -47,19 +45,7 @@ public class MoveCam : MonoBehaviour
                 curTouchPos = new Vector2(posX, posY);
                 firstTouch = false;
             }
-            else if (nthFrameChecker > 0)
-            {
-                nthFrameChecker--;
-
-                if (nthFrameChecker == 0)
-                {
-                    if (Mathf.Abs(Input.mousePosition.x - curTouchPos.x) < Screen.width / 15 && Mathf.Abs(Input.mousePosition.y - curTouchPos.y) < Screen.width / 15)
-                        firstTouch = true;
-                    
-                }
-                    
-            }
-            else if (firstTouch == false && nthFrameChecker == 0)
+            else if (firstTouch == false)
             {
                 prevTouchPos = new Vector2(curTouchPos.x, curTouchPos.y);
                 curTouchPos = new Vector2(posX, posY);
@@ -96,6 +82,9 @@ public class MoveCam : MonoBehaviour
                     // Do not allow the camera to go behind the platform
                     if (Camera.main.transform.position.y < 3)
                         Camera.main.transform.position = new Vector3(cam.transform.position.x, 3, cam.transform.position.z);
+
+                    if (Camera.main.transform.position.y > 15)
+                        Camera.main.transform.position = new Vector3(cam.transform.position.x, 15, cam.transform.position.z);
 
                     escapedFrame = true;
                 }

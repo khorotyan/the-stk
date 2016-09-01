@@ -9,6 +9,7 @@ public class OnlineHighscores : MonoBehaviour
     public static string webURL = "http://dreamlo.com/lb/";
 
     public static Highscore[] highscoreList = new Highscore[0];
+    public static bool canCommunicateWithServer = false;
     static OnlineHighscores instance;
     DisplayHighscores displayHighscores;
 
@@ -71,13 +72,17 @@ public class OnlineHighscores : MonoBehaviour
         yield return www; // Wait for www to finish getting the scores
 
         if (string.IsNullOrEmpty(www.error))
-        {           
+        {
+            canCommunicateWithServer = true;
             FormatHighscores(www.text);
             if (SceneManager.GetActiveScene().name == "LeaderboardScene")
                 displayHighscores.OnHighscoresDownloaded(highscoreList);
         }
         else
+        {
+            canCommunicateWithServer = false;
             print("Error Downloading " + www.error);
+        }
     }
 
     void FormatHighscores(string textStream)

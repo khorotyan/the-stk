@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 public class SelectNMoveObject : MonoBehaviour {
 
@@ -18,20 +19,25 @@ public class SelectNMoveObject : MonoBehaviour {
     {
         
 	}
-	
-	void Update ()
+
+    void Update()
     {
         // Whenever an object is extracted, unselect it
         if (canMoveTheObject == false && rayastedObjects.Count > 0)
         {
             rayastedObjects[0].transform.gameObject.GetComponent<Renderer>().material = normalObjMaterial;
             rayastedObjects.Remove(rayastedObjects[0]);
-            
+
             canMoveTheObject = true;
         }
 
         if (canMoveTheObject == true)
-            SelectObject();      
+        {
+            if (!EventSystem.current.IsPointerOverGameObject())
+            {
+                SelectObject();
+            }
+        }
     }
 
     // By clicking on the object, the user can select it and becomes visible through objects due to "selectedObjMaterial" material   
